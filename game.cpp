@@ -236,7 +236,8 @@ int Game::key_auto(Snake& snake)  // Deepseek.
     int fx = -1, fy = -1;
     for(int x = 4; x < MAP_W - 4; x += 2)
         for(int y = 2; y < MAP_H - 2; y++)
-            if(Food::checkFood(x, y) != nullptr)
+            if(Food::checkFood(x, y) == &food1
+            || Food::checkFood(x, y) == &food2)
             {
                 int distance = abs(x - x0) + abs(y - y0);
                 if(distance < min_distance)
