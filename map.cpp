@@ -153,28 +153,23 @@ void Map::printOver()
 	goto_coord(4, 5); std::cout << "║ ║╚╗ ║ ╔╗ ║ ══ ║ ║══╣║ ║ ║ ║ ╚╝ ║ ║══╣ ╔═╝";
 	goto_coord(4, 6); std::cout << "║ ╚═╝ ║ ╔╗ ║ ╠╣ ║ ║══╣║ ╚═╝ ╠╗  ╔╣ ║══╣ ║  ";
 	goto_coord(4, 7); std::cout << "╚═════╩═╝╚═╩═╝╚═╩════╝╚═════╝╚══╝╚════╩═╝  ";
-	goto_coord(4, 8); std::cout << "Press 'C' to continue. ";
-	goto_coord(4, 9); std::cout << "Press 'X' to quit.     ";
+	goto_coord(4, 8); std::cout << "Press 'C' to continue.                     ";
+	goto_coord(4, 9); std::cout << "Press 'X' to quit.                         ";
 	goto_coord(MAP_W + 10, MAP_H - 1);
 }
 
 void Map::printStart()
 {
 	for(int x = 30; x <= 30 + 48; x += 2)
-		for(int y = 9; y <= 14; y++)
+		for(int y = 9; y <= 16; y++)
 			setOccupied(x, y, true);
-	for(int x = 30; x <= 30 + 18; x += 2)
-	{
-		setOccupied(x, 15, true);
-		setOccupied(x, 16, true);
-	}
 	goto_coord(30,  9); std::cout << "╔═════╗         ╔═╗        ╔═════╗               ";
 	goto_coord(30, 10); std::cout << "║ ╔═══╝         ║ ║        ║ ╔═╗ ║               ";
 	goto_coord(30, 11); std::cout << "║ ╚═══╦═╗╔═╦════╣ ║╔═╦════╗║ ║╔╩═╬════╦═╗╔═╦════╗";
 	goto_coord(30, 12); std::cout << "╚═══╗ ║ ╚╣ ║ ╔╗ ║ ══ ║ ║══╣║ ║╚╗ ║ ╔╗ ║ ══ ║ ║══╣";
 	goto_coord(30, 13); std::cout << "╔═══╝ ║ ╠╗ ║ ╔╗ ║ ╠╗ ║ ║══╣║ ╚═╝ ║ ╔╗ ║ ╠╣ ║ ║══╣";
 	goto_coord(30, 14); std::cout << "╚═════╩═╝╚═╩═╝╚═╩═╝╚═╩════╝╚═════╩═╝╚═╩═╝╚═╩════╝";
-	goto_coord(30, 15); std::cout << "Press 'C' to start. ";
-	goto_coord(30, 16); std::cout << "Press 'X' to quit.  ";
+	goto_coord(30, 15); std::cout << "Press 'C' to start.                              ";
+	goto_coord(30, 16); std::cout << "Press 'X' to quit.                               ";
 	goto_coord(MAP_W + 10, MAP_H - 1);
 }
