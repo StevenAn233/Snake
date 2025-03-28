@@ -8,7 +8,7 @@ int main()
 	while(true)
 	{
 		game.init_menu();
-		if(!game.check_key()) break;
+		if(!game.menu_anime()) break;
 		game.init_round();
 		game.gaming();
 		if(!game.check_key()) break;

@@ -41,7 +41,6 @@ void Game::init_menu()
     int best_score = atoi(line.c_str());
     Map::printInfo("BESTSCORE", best_score, 9);
     map.printStart();
-
 }
 
 void Game::init_round()
@@ -82,7 +81,7 @@ bool Game::move_snake(Snake& snake, int key)
 	return true;
 }
 
-void Game::npc_action(Snake& snake, int total_time)
+void Game::npc_action(Snake& snake, int total_time, int gap_time)
 {
     if((total_time % snake.getSpeed()) == 0)
 	{
@@ -97,7 +96,7 @@ void Game::npc_action(Snake& snake, int total_time)
 				snake.setTransformed(true);
 			}
 		}
-		if(npc_time >= GAPTIME && snake.getTransformed())
+		if(npc_time >= gap_time && snake.getTransformed())
 		{
 			npc_time = 0;
 			snake.init_random();
@@ -126,12 +125,35 @@ void Game::store_score(int score)
     }
 }
 
+bool Game::menu_anime()
+{
+    srand((unsigned int)time(NULL));
+    npc1.clean();
+    food1.cleanLoop();
+    food2.cleanLoop();
+    food1.create();
+    npc1.init_random();
+    npc1.setSpawned(true);
+    unsigned int total_time = 0;
+    while(true)
+    {
+        if(_kbhit())
+        {
+            char ch = _getch();
+            if(ch == 'c') return true;
+            else if(ch == 'x') return false;
+        }
+        total_time += LOOPTIME;
+        npc_action(npc1, total_time, 0);
+        game_loop();
+    }
+    return false;
+}
+
 void Game::gaming()
 {
 	srand((unsigned int)time(NULL));
 	unsigned int total_time = 0;
-	bool spawned_npc1 = false;
-	bool transformed_npc1 = false;
 	while(true)
 	{
         if(paused)
@@ -148,7 +170,7 @@ void Game::gaming()
                 map.printOver();
                 break;
             }
-		npc_action(npc1, total_time);
+		npc_action(npc1, total_time, GAPTIME);
         game_loop();
 	}
 }
@@ -272,7 +294,7 @@ int Game::key_auto(Snake& snake)  // Deepseek.
         ny < 0 || ny >= MAP_H) continue;
         if(!Map::checkOccupied(nx, ny) && 
         Snake::checkSnake(nx, ny) == nullptr) 
-        {return this_key;}
+        return this_key;
     }
     // No safety directions.
     return UP;
@@ -283,8 +305,8 @@ void Game::transform(Snake* snake, Food* food)
 	for(int i = 1; i < snake->getLen(); i++)
 	{
 		Snake::setSnake(snake->getX()[i], snake->getY()[i], nullptr);
-		food -> create_as_snake_dies(snake->getX()[i], snake->getY()[i]);
+		food->create_as_snake_dies(snake->getX()[i], snake->getY()[i]);
 	}
 	Snake::setSnake(snake->get_x_tail(), snake->get_y_tail(), nullptr);
-	food -> create_as_snake_dies(snake->get_x_tail(), snake->get_y_tail());
+	food->create_as_snake_dies(snake->get_x_tail(), snake->get_y_tail());
 }
