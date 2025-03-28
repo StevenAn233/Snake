@@ -268,34 +268,74 @@ int Game::key_auto(Snake& snake)  // Deepseek.
             direction[1] = (dx > 0) ? RIGHT : LEFT;
         }
     }
+    // Boundary check.
+    auto isNearWall = [&](int dir)
+    {
+        const int SAFE_MARGIN = 4;
+        switch(dir)
+        {
+        case LEFT:  return x0 <= SAFE_MARGIN;
+        case RIGHT: return x0 >= MAP_W - SAFE_MARGIN;
+        case UP:    return y0 <= SAFE_MARGIN/2;
+        case DOWN:  return y0 >= MAP_H - SAFE_MARGIN/2;
+        }
+        return false;
+    };
+    // Body check.
+    auto isBodyCollision = [&](int nx, int ny)
+    {
+        for(int i = 1; i < snake.getLen(); i++)
+        {
+            if(nx == snake.getX()[i] && ny == snake.getY()[i])
+                return true;
+        }
+        return false;
+    };
     // Check each direction by priority.
     for(int i = 0; i < 4; i++)
     {
         int this_key = direction[i];
         // Skip opposite direction.
-        if(pre_key != -1) 
+        if(pre_key != -1)
         {
             if((pre_key == UP && this_key == DOWN) ||
-            (pre_key == DOWN && this_key == UP) ||
-            (pre_key == LEFT && this_key == RIGHT) ||
-            (pre_key == RIGHT && this_key == LEFT)) 
-            continue;
+                (pre_key == DOWN && this_key == UP) ||
+                (pre_key == LEFT && this_key == RIGHT) ||
+                (pre_key == RIGHT && this_key == LEFT))
+                continue;
         }
         // Check if the next move is safe.
         int nx = x0, ny = y0;
         switch(this_key)
         {
-            case UP:    ny--; break;
-            case DOWN:  ny++; break;
-            case LEFT:  nx -= 2; break;
-            case RIGHT: nx += 2; break;
+        case UP:    ny--; break;
+        case DOWN:  ny++; break;
+        case LEFT:  nx -= 2; break;
+        case RIGHT: nx += 2; break;
         }
         if(nx < 2 || nx >= MAP_W - 2
-         ||ny < 2 || ny >= MAP_H - 2)
+            || ny < 2 || ny >= MAP_H - 2)
         continue;
-        if(!Map::checkOccupied(nx, ny) && 
-        Snake::checkSnake(nx, ny) == nullptr) 
+        if(Map::checkOccupied(nx, ny) ||
+           Snake::checkSnake(nx, ny) ||
+           isBodyCollision(nx, ny) ||
+           isNearWall(this_key))
+        continue;
         return this_key;
+    }
+    for(int dir : {UP, LEFT, RIGHT, DOWN})
+    {
+        int nx = x0, ny = y0;
+        switch(dir)
+        {
+        case UP:    ny--; break;
+        case DOWN:  ny++; break;
+        case LEFT:  nx -= 2; break;
+        case RIGHT: nx += 2; break;
+        }
+        if(!Map::checkOccupied(nx, ny) 
+        && !Snake::checkSnake(nx, ny))
+        return dir;
     }
     // No safety directions.
     return UP;
