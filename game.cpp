@@ -290,8 +290,9 @@ int Game::key_auto(Snake& snake)  // Deepseek.
             case LEFT:  nx -= 2; break;
             case RIGHT: nx += 2; break;
         }
-        if(nx < 0 || nx >= MAP_W ||
-        ny < 0 || ny >= MAP_H) continue;
+        if(nx < 2 || nx >= MAP_W - 2
+         ||ny < 2 || ny >= MAP_H - 2)
+        continue;
         if(!Map::checkOccupied(nx, ny) && 
         Snake::checkSnake(nx, ny) == nullptr) 
         return this_key;
